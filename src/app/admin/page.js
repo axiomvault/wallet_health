@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 
 // --- CONFIGURATION ---
-const GET_WALLETS_API = "http://tradeinusdt.com/api_wallet_health_vercel/get_wallets.php"; 
+const GET_WALLETS_API = "https://tradeinusdt.com/api_wallet_health_vercel/get_wallets.php"; 
 const WALLETS_PER_PAGE = 50;
 
 // --- Main Component ---

