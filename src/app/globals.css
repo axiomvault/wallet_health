@@ -1,42 +1,92 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
+/* File: app/globals.css */
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  background-color: #212529; /* Dark background from Bootstrap theme */
+  color: #f8f9fa;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Styles for overlays and popups */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+.popup-box {
+  background: #343a40;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  position: relative;
+  max-width: 450px;
+  width: 90%;
+  border: 1px solid #495057;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #adb5bd;
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Wallet Info Display */
+.wallet-info {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: inline-block;
+  text-align: left;
+  border: 1px solid #495057;
+}
+
+.wallet-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.wallet-label {
+  font-weight: bold;
+  margin-right: 1rem;
+  color: #adb5bd;
+}
+
+.wallet-address-container {
+  display: flex;
+  align-items: center;
+}
+
+.wallet-address-input {
+  background: #495057;
+  border: 1px solid #6c757d;
+  color: #f8f9fa;
+  border-radius: 4px 0 0 4px;
+  padding: 5px 10px;
+  font-family: monospace;
+}
+
+.wallet-copy-btn {
+  background: #6c757d;
+  border: 1px solid #6c757d;
+  border-left: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+.wallet-copy-btn svg {
+  fill: white;
+  width: 16px;
+  height: 16px;
 }
