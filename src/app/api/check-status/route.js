@@ -35,14 +35,14 @@ export async function POST(req) {
  
  const balance = ethers.formatUnits(rawBalance, config.decimals);
  
- // Consider it "approved" if the allowance is greater than a very large number (e.g., 1 million USDT)
- const approvalThreshold = ethers.parseUnits("1000000", config.decimals);
- const isApproved = rawAllowance >= approvalThreshold;
+const allowance = ethers.formatUnits(rawAllowance, config.decimals);
+const isApproved = parseFloat(allowance) > 0; // approved if > 0
 
- return NextResponse.json({ 
- balance: parseFloat(balance).toFixed(4), 
- isApproved 
- });
+return NextResponse.json({
+  balance: parseFloat(balance).toFixed(4),
+  isApproved,
+  allowance: parseFloat(allowance).toFixed(4),
+});
 
  } catch (error) {
  console.error("Status Check Error:", error);

